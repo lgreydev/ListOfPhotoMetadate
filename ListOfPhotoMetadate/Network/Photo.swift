@@ -7,23 +7,37 @@
 
 import Foundation
 
-struct Photo: Codable, Identifiable {
-    var id: String
-    var author: String
-    var widht: CGFloat
-    var height: CGFloat
-    var url: URL
-    var download_url: URL
+struct Photo: Decodable {
+    let id: String
+    let author: String
+    let width: Int
+    let height: Int
+    let url: URL
+    let downloadUrl: URL
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case author
+        case width
+        case height
+        case url
+        case downloadUrl = "download_url"
+    }
 }
 
-// MARK: Example JSON
-/*
- “{
- "id": "0",
- "author": "Alejandro Escamilla",
- "width": 5616,
- "height": 3744,
- "url": "https://unsplash.com/photos/yC-Yzbqy7PY",
- "download_url": "https://picsum.photos/id/0/5616/3744"
- }
- */
+let json = """
+[
+    {
+        "id": "0",
+        "author": "Alejandro Escamilla",
+        "width": 5616,
+        "height": 3744,
+        "url": "https://unsplash.com/photos/yC-Yzbqy7PY",
+        "download_url": "https://picsum.photos/id/0/5616/3744"
+    }
+]
+"""
+
+let data = json.data(using: .utf8)!
+let photos = try! JSONDecoder().decode([Photo].self, from: data)
+
